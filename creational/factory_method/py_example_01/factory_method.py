@@ -3,7 +3,7 @@ import xml.etree.ElementTree as etree
 
 
 def connector_factory(file_path):
-
+    '''factory method'''
     class JSONConnector:
         def __init__(self, file_path):
             self.data = {}
@@ -35,18 +35,19 @@ def connector_factory(file_path):
 
 
 def connect_to(file_path):
-    factory = None
+    '''creator return a product'''
+    product = None
     try:
-        factory = connector_factory(file_path)
+        product = connector_factory(file_path)
     except ValueError as err:
         print(err)
-    return factory
+    return product
 
 
 def main():
     # sqlite_factory = connect_to()
-    xml_factory = connect_to('person.xml')
-    xml_data = xml_factory.parse_data
+    xml_product = connect_to('person.xml')
+    xml_data = xml_product.parse_data
     liars = xml_data.findall(".//{}[{}='{}']".format('person', 'lastName', 'Liar'))
     print(f"found: {len(liars)} persons")
     for liar in liars:
@@ -54,14 +55,13 @@ def main():
         print(f"last name: {liar.find('lastName').text}")
         [print(f"phone number ({t.attrib['type']}): {t.text}") for t in liar.find('phoneNumbers')]
 
-    json_factory = connect_to('donut.json')
-    json_data = json_factory.parse_data
+    json_product = connect_to('donut.json')
+    json_data = json_product.parse_data
     print(f"found: {len(json_data)} donuts")
     for dount in json_data:
         print(f"name: {dount['name']}")
         print(f"price: ${dount['ppu']}")
         [print(f"topping: {t['id']} {t['type']}") for t in dount['topping']]
-
 
 
 if __name__ == "__main__":

@@ -1,6 +1,18 @@
 import socket
 
 
+class LogSocket:
+    def __init__(self, socket):
+        self.socket = socket
+
+    def send(self, data):
+        print(f"Sending {data} and {self.socket.getpeername()[0]}.")
+        self.socket.send(data)
+
+    def close(self):
+        self.socket.close()
+
+
 def respond(client):
     response = input("Enter a value: ")
     client.send(bytes(response, 'utf8'))
@@ -12,7 +24,7 @@ server.listen(1)
 try:
     while True:
         client, addr = server.accept()
-        respond(client)
+        respond(LogSocket(client))
 finally:
     server.close()
 
